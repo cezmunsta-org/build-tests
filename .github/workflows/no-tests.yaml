@@ -1,0 +1,26 @@
+name: No testing required
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - ready_for_review
+      - synchronize
+    paths-ignore:
+      - 'automation/**'
+      - 'tools/**'
+
+  workflow_dispatch:
+
+jobs:
+  skip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark as complete
+        run: echo OK
+

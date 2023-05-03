@@ -1,0 +1,56 @@
+name: Python
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - ready_for_review
+      - synchronize
+    paths:
+      - '**.py'
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    outputs:
+      lintlog: ${{ steps.lint.outputs.log }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.9', '3.10', '3.11']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+
+      - name: Prepare Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+
+      - name: Prepare Python
+        run: |
+          python3 -m pip install pylint
+
+      - name: Linting
+        id: lint
+        run: |
+          pylint --reports=no --output-format=parseable --rcfile=etc/pylint.conf --output=/tmp/lint.log
+          echo "log=$(cat /tmp/lint.log | wc -l)" >> "${GITHUB_OUTPUT}"
+
+      - name: Archive linting results
+        if: ${{ test.outputs.lintlog > 0 }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-lint-results
+          path: |
+            /tmp/lint.log
+            /tmp/lint.err
+          retention_days: 5
