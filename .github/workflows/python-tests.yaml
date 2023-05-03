@@ -45,7 +45,7 @@ jobs:
       - name: Linting
         id: lint
         run: |
-          pylint --reports=no --output-format=parseable --rcfile=etc/pylint.conf --output=/tmp/lint.log workspace/
+          pylint --reports=no --output-format=parseable --rcfile=workspace/etc/pylint.conf --output=/tmp/lint.log workspace/
           test ! -s /tmp/lint.log
           #echo "log=$(cat /tmp/lint.log | wc -l)" >> "${GITHUB_OUTPUT}"
 
