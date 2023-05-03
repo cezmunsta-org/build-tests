@@ -1,0 +1,17 @@
+---
+profile: safety
+
+exclude_paths:
+  - ../.git/
+  - ../.github/
+  - ../build/
+  - ../etc/
+  - ../k8s/
+  - ../tools/
+
+kinds:
+  - yaml: "**/*.yaml"
+
+offline: true
+progressive: false
+...

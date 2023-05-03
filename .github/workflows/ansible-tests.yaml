@@ -1,0 +1,69 @@
+name: Ansible
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - ready_for_review
+      - synchronize
+    paths:
+      - 'automation/**'
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    outputs:
+      lintlog: ${{ steps.lint.outputs.log }}
+      linterrors: ${{ steps.lint.outputs.errors }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.9', '3.10', '3.11']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+
+      - name: Prepare Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+
+      - name: Prepare Ansible
+        run: |
+          python3 -m pip install -r etc/requirements.txt
+          ansible-config dump &>/dev/null
+
+      - name: Linting
+        id: lint
+        run: |
+          ansible-lint --parseable-severity --nocolor -c etc/ansible-lint.yaml -q 1>/tmp/lint.log 2>/tmp/lint.err
+          echo "log=$(cat /tmp/lint.log | wc -l)" >> "${GITHUB_OUTPUT}"
+          echo "errors=$(cat /tmp/lint.err | wc -l)" >> "${GITHUB_OUTPUT}"
+        env:
+          ANSIBLE_CONFIG: default.cfg
+
+      - name: Archive linting results
+        if: ${{ test.outputs.lintlog > 0 || test.outputs.linterrors > 0 }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ansible-lint-results
+          path: |
+            /tmp/lint.log
+            /tmp/lint.err
+          retention_days: 5
+
+      - name: Perform full-run
+        if: ${{ matrix.python == '3.11' }}
+        run: |
+          ansible-playbook -i etc/pr-workflow-inventory.yaml automation/full.yaml
+        env:
+          ANSIBLE_CONFIG: default.cfg
+
