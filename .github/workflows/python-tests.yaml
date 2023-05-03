@@ -46,7 +46,7 @@ jobs:
           echo "log=$(cat /tmp/lint.log | wc -l)" >> "${GITHUB_OUTPUT}"
 
       - name: Archive linting results
-        if: ${{ test.outputs.lintlog > 0 }}
+        if: ${{ steps.lint.outputs.lintlog > 0 }}
         uses: actions/upload-artifact@v3
         with:
           name: python-lint-results
