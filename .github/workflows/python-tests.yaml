@@ -36,9 +36,9 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pip'
 
-      #- name: Prepare Python
-      #  run: |
-      #    python3 -m pip install pylint
+      - name: Prepare Python
+        run: |
+          python3 -m pip install -r etc/requirements.txt
 
       - name: Linting
         id: lint
