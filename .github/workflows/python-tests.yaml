@@ -19,8 +19,6 @@ on:
 
 jobs:
   test:
-    #outputs:
-    #  lintlog: ${{ steps.lint.outputs.log }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -29,6 +27,8 @@ jobs:
     steps:
       - name: Checkout codebase
         uses: actions/checkout@v3
+        with:
+          path: workspace
 
       - name: Prepare Python
         uses: actions/setup-python@v4
@@ -38,21 +38,8 @@ jobs:
 
       - name: Prepare Python
         run: |
-          python3 -m pip install -r etc/requirements.txt
+          python3 -m pip install -r workspace/etc/requirements.txt
 
       - name: Linting
-        id: lint
         run: |
-          pylint --reports=no --output-format=parseable --rcfile=etc/pylint.conf --output=/tmp/lint.log .
-          test ! -s /tmp/lint.log
-          #echo "log=$(cat /tmp/lint.log | wc -l)" >> "${GITHUB_OUTPUT}"
-
-      #- name: Archive linting results
-      #  if: ${{ steps.lint.outputs.lintlog > 0 }}
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: python-lint-results
-      #    path: |
-      #      /tmp/lint.log
-      #      /tmp/lint.err
-      #    retention_days: 5
+          pylint --reports=no --output-format=parseable --rcfile=workspace/etc/pylint.conf workspace/
