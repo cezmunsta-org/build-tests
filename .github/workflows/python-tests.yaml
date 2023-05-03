@@ -13,6 +13,7 @@ on:
       - synchronize
     paths:
       - '**.py'
+      - etc/requirements.txt
 
   workflow_dispatch:
 
@@ -35,9 +36,9 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pip'
 
-      - name: Prepare Python
-        run: |
-          python3 -m pip install pylint
+      #- name: Prepare Python
+      #  run: |
+      #    python3 -m pip install pylint
 
       - name: Linting
         id: lint
