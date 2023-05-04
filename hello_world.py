@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Simple Hello World script
-"""
+"""Simple Hello World script"""
 
 import sys
 
