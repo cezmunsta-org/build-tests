@@ -15,7 +15,7 @@ jobs:
   workflow-labels:
     if: |
       ${{
-      ! join(github.event.issue.labels.*.name, '') == '' &&
+        join(github.event.issue.labels.*.name, '') == '' &&
         github.event.pull_request.draft == false
       }}
     strategy:
