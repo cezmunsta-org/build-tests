@@ -1,0 +1,39 @@
+name: Labels
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+  workflow_dispatch:
+
+jobs:
+  workflow-labels:
+    if: |
+      ${{
+      ! join(github.event.issue.labels.*.name, '') == '' &&
+        github.event.pull_request.draft == false
+      }}
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    uses: actions/github-script@v6
+    with:
+      result-encoding: string
+      retries: 1
+      script: |
+        github.rest.issues.addLabels({
+          issue_number: context.issue.number,
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          labels: ["skip-tests"]
+        })
