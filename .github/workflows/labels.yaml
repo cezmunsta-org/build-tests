@@ -22,7 +22,10 @@ jobs:
       ! join(github.event.issue.labels.*.name, '') == '' &&
         github.event.pull_request.draft == false
       }}
-    permissions: write-all
+    permissions:
+      issues:
+        - read
+        - write
     strategy:
       matrix:
         os: [ubuntu-latest]
