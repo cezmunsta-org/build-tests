@@ -33,9 +33,9 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
             }))
-            github.rest.issues.deleteLabels({
+            github.rest.issues.removeLabel({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["skip-tests"]
+              name: "skip-tests"
             })
