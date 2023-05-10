@@ -26,6 +26,11 @@ jobs:
       contents: read
       issues: write
       pull-requests: read
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.9', '3.10', '3.11']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/github-script@v6
         with:
