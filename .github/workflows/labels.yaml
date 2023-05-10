@@ -1,5 +1,10 @@
 name: Labels
 
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
 on:
   pull_request:
     branches:
@@ -13,24 +18,30 @@ on:
 
 jobs:
   workflow-labels:
-    if: |
-      ${{
-        join(github.event.pull_request.labels.*.name, '') == '' &&
-        github.event.pull_request.draft == false
-      }}
+    #if: |
+    #  ${{
+    #    join(github.event.pull_request.labels.*.name) == '' &&
+    #    github.event.pull_request.draft == false
+    #  }}
     strategy:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
-      - uses: actions/github-script@v6
-        with:
-          result-encoding: string
-          retries: 1
-          script: |
-            github.rest.issues.deleteLabel({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: "skiptests"
-            })
+       - uses: actions/labeler@v4
+         with:
+           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+    #  - uses: actions/github-script@v6
+    #    with:
+    #      result-encoding: string
+    #      retries: 1
+    #      script: |
+    #        github.rest.issues.deleteLabel({
+    #          issue_number: context.issue.number,
+    #          owner: context.repo.owner,
+    #          repo: context.repo.repo,
+    #          name: "skiptests"
+    #        })
