@@ -15,7 +15,7 @@ jobs:
   workflow-labels:
     if: |
       ${{
-        join(github.event.issue.labels.*.name, '') == '' &&
+        join(github.event.pull_request.labels.*.name, '') == '' &&
         github.event.pull_request.draft == false
       }}
     strategy:
@@ -28,9 +28,9 @@ jobs:
           result-encoding: string
           retries: 1
           script: |
-            github.rest.issues.addLabels({
+            github.rest.issues.deleteLabel({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["skiptests"]
+              name: "skiptests"
             })
