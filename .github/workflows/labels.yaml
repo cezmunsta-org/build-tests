@@ -21,7 +21,7 @@ jobs:
         github.event.pull_request.draft == false
       }}
     permissions:
-      issues: write-all
+      issues: write
     strategy:
       matrix:
         os: [ubuntu-latest]
