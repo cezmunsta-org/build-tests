@@ -1,9 +1,5 @@
 name: Labels
 
-permissions:
-  contents: read
-  pull-requests: read
-
 on:
   pull_request:
     branches:
@@ -23,9 +19,9 @@ jobs:
         github.event.pull_request.draft == false
       }}
     permissions:
-      issues:
-        - read
-        - write
+      contents: read
+      pull-requests: read
+      issues: write
     strategy:
       matrix:
         os: [ubuntu-latest]
