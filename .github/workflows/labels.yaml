@@ -1,0 +1,20 @@
+name: Labels
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  autolabel:
+    permissions:
+      content: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@4

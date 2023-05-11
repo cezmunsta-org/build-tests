@@ -1,0 +1,15 @@
+ansible:
+  - automation/**
+  - etc/ansible-inventory.yaml
+
+python:
+  - *.py
+  - etc/requirements.txt
+
+docs:
+  - docs/**
+  - etc/mkdocs.yaml
+
+skip-test:
+  - CODEOWNERS
+  - README.md
